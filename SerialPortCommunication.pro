@@ -11,14 +11,20 @@ CONFIG += c++17
 
 SOURCES += \
     choosewidget.cpp \
+    jbf293kparser.cpp \
     loginwidget.cpp \
     main.cpp \
-    mainwindow.cpp
+    mainwindow.cpp \
+    mqttclient.cpp \
+    yiaiparser.cpp
 
 HEADERS += \
     choosewidget.h \
+    jbf293kparser.h \
     loginwidget.h \
-    mainwindow.h
+    mainwindow.h \
+    mqttclient.h \
+    yiaiparser.h
 
 FORMS += \
     choosewidget.ui \
@@ -35,3 +41,6 @@ OTHER_FILES += fonts/iconfont.ttf
 
 RESOURCES += \
     pic/pic.qrc
+
+
+QT += serialport mqtt

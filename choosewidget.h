@@ -2,7 +2,9 @@
 #define CHOOSEWIDGET_H
 
 #include <QWidget>
-#include <mainwindow.h>
+#include "ui_choosewidget.h"
+class MainWindow;
+
 
 namespace Ui {
 class choosewidget;
@@ -16,11 +18,19 @@ public:
     explicit choosewidget(QWidget *parent = nullptr);
     ~choosewidget();
 
+    void setStart(bool able);
+
 private slots:
     void on_pushButton_2_clicked();
 
+    void on_startButton_clicked();
+
 private:
     Ui::choosewidget *ui;
+
+    MainWindow *mWindow;
+
+
 };
 
 #endif // CHOOSEWIDGET_H
