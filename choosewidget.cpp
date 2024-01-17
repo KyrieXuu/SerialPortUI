@@ -15,12 +15,11 @@ choosewidget::~choosewidget()
     delete ui;
 }
 
-void choosewidget::setStart(bool able){
-
+void choosewidget::setStart(){
+    able = !able;
     ui->startButton->setText(able?QString("暂停"):QString("启动"));
     //项目启动后不能再设置
     ui->pushButton_2->setEnabled(!able);
-    able = !able;
     if(able){
         qDebug()<<"项目启动";
     }else{
@@ -42,6 +41,10 @@ void choosewidget::on_startButton_clicked()
     if (mWindow == nullptr) {
         mWindow = new MainWindow; // 创建 MainWindow 对象
     }
-    mWindow->setStart();
+    setStart();
 }
 
+bool choosewidget::getable(){
+    qDebug()<<"启动标志："<<able;
+    return able;
+}

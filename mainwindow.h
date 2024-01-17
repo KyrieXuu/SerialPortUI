@@ -15,6 +15,7 @@
 #include <QListView>
 class choosewidget;
 class QSerialPort;
+
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
 QT_END_NAMESPACE
@@ -33,8 +34,6 @@ public:
     void openSerial(QString portnameStr,QSerialPort* serialIo);  //槽函数-打开串口
     void closeSerial(QSerialPort* serialIo); //槽函数-关闭串口
     void connectbroker();//连接服务器
-
-    void setStart();//连接后不能修改该串口配置
 
     void saveDataInTxtFile(QString filepath, QString data);     //将解析的数据保存到文件中
 
@@ -55,7 +54,6 @@ private:
     QString mqttIP;  //MQTT连接IP
     int mqttPort;  //MQTT连接端口
     int flag = 0;  //防止出现一组数据多次传输
-    bool able = false;//设置是否启动
     QString portnameStr1;//串口名
     QString portnameStr2;
     QString portnameStr3;

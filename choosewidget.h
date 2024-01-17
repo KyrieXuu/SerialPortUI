@@ -18,7 +18,8 @@ public:
     explicit choosewidget(QWidget *parent = nullptr);
     ~choosewidget();
 
-    void setStart(bool able);
+    void setStart();
+    bool getable();
 
 private slots:
     void on_pushButton_2_clicked();
@@ -29,6 +30,8 @@ private:
     Ui::choosewidget *ui;
 
     MainWindow *mWindow;
+
+    bool able = false;//设置是否启动
 
 
 };

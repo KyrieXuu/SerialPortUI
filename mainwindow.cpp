@@ -142,9 +142,6 @@ void MainWindow::initSerial(){
     //点击[保存设置]按钮
     connect(ui->linkButton,&QPushButton::clicked,this,&MainWindow::connectbroker);
 }
-void MainWindow::setStart(){
-    choose->setStart(able);
-}
 
 void MainWindow::openSerial(QString portnameStr,QSerialPort* serialIo){
 
@@ -248,12 +245,13 @@ void MainWindow::sendACK(QSerialPort* serialIo){
 void MainWindow::recvData(QSerialPort* serialIo)
 {
     static QByteArray recv_buffer;
+    bool sign = choose->getable();
     if (serialIo->bytesAvailable()) {
         //串口收到的数据可能不是连续的，需要的话应该把数据缓存下来再进行协议解析，类似tcp数据处理
         const QByteArray recv_data=serialIo->readAll();
         recv_buffer.append(recv_data);
         //接收发送要一致，如果是处理字节数据，可以把QByteArray当数组一样取下标，或者用data()方法转为char*形式
-        if( able == true ){ //若启动则开始处理字节数据
+        if( sign == true ){ //若启动则开始处理字节数据
             processCompletePacket(&recv_buffer,serialIo);
         }else{//若没启动则清空缓存区
             recv_buffer.clear();
