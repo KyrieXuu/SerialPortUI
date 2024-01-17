@@ -9,7 +9,7 @@ MainWindow::MainWindow(QWidget *parent)
     ui->setupUi(this);
     choose = new choosewidget(); // 创建 choosewidget 对象
     initMainUi();
-    initSerial();
+    initSerial1();
 }
 
 MainWindow::~MainWindow()
@@ -29,69 +29,52 @@ void MainWindow::initMainUi(){
     ui->label_34->setScaledContents(true);
     ui->label_34->setPixmap(QPixmap::fromImage(*img_mainicon));
 }
-
-void MainWindow::initSerial(){
-
+void MainWindow::initSerial1()
+{
     // 获取可用串口列表
     QList<QSerialPortInfo> serialPorts = QSerialPortInfo::availablePorts();
 
-    // 检测可用串口数量
-    if (serialPorts.size() >= 3) {
-        qDebug()<<"当前可用串口足够";
-        // 有至少三个可用串口
-        portnameStr1 = serialPorts[0].portName();
-        portnameStr2 = serialPorts[1].portName();
-        portnameStr3 = serialPorts[2].portName();
-
-        // 使用这三个串口
-        QSerialPort *serialIo1 = new QSerialPort(portnameStr1, this);
-        QSerialPort *serialIo2 = new QSerialPort(portnameStr2, this);
-        QSerialPort *serialIo3 = new QSerialPort(portnameStr3, this);
-
-        // 连接信号槽
-        connect(serialIo1, &QSerialPort::readyRead, std::bind(&MainWindow::recvData, this, serialIo1));
-        connect(serialIo2, &QSerialPort::readyRead, std::bind(&MainWindow::recvData, this, serialIo2));
-        connect(serialIo3, &QSerialPort::readyRead, std::bind(&MainWindow::recvData, this, serialIo3));
-        //点击串口[连接]/[断开]按钮
-        connect(ui->btnOpen1,&QPushButton::clicked,this,[this,serialIo1]()mutable{
-            if(ui->btnOpen1->text()=="连接"){
-                openSerial(portnameStr1,serialIo1);
-            }else{
-                closeSerial(serialIo1);
-            }
-        });
-        //点击串口[连接]/[断开]按钮
-        connect(ui->btnOpen2,&QPushButton::clicked,this,[this,serialIo2]()mutable{
-            if(ui->btnOpen2->text()=="连接"){
-                openSerial(portnameStr2,serialIo2);
-            }else{
-                closeSerial(serialIo2);
-            }
-        });
-        //修改串口名
-        ui->portButton1->setText(portnameStr1);
-        ui->portButton2->setText(portnameStr2);
-    } else if(serialPorts.size() >= 1){
-        qDebug()<<"当前可用串口COM1";
-        // 有串口，但不到3个
+    // 查找第一个可用串口
+    if (serialPorts.size() >= 1) {
         portnameStr1 = serialPorts[0].portName();
         //使用串口
-        QSerialPort *serialIo1 = new QSerialPort(portnameStr1, this);
+        serialIo1 = new QSerialPort(portnameStr1, this);
         //连接信号槽
-        connect(serialIo1, &QSerialPort::readyRead, this,std::bind(&MainWindow::recvData, this, serialIo1));
+        // 连接信号和槽函数，并传递上下文对象
+        connect(serialIo1, &QSerialPort::readyRead, this, [this]() {
+            recvData(serialIo1);
+        });
 
         //点击串口[连接]/[断开]按钮
-        connect(ui->btnOpen1,&QPushButton::clicked,this,[this,serialIo1]()mutable{
-            if(ui->btnOpen1->text()=="连接"){
-                openSerial(portnameStr1,serialIo1);
-            }else{
-                closeSerial(serialIo1);
+        connect(ui->btnOpen1, &QPushButton::clicked,this, [this]() mutable {
+            if (ui->btnOpen1->text() == "连接") {
+                openSerial1();
+            } else {
+                closeSerial1();
             }
         });
+        //设置输入框属性，限制输入内容为IP地址和数字
+        ui->ipLineEdit->setInputMask("000.000.000.000;_");
+        ui->portLineEdit->setValidator(new QIntValidator(0,65535,this));
+        //设置初始值
+        ui->ipLineEdit->setText("222.175.204.246");
+        ui->portLineEdit->setText("13306");
+
+        //点击【保存设置】按钮连接mqtt
+        connect(ui->linkButton,&QPushButton::clicked,this,&MainWindow::connectbroker);
+
         //修改串口名
         ui->portButton1->setText(portnameStr1);
-        ui->Com2Frame->setVisible(false);
-    }else{//若没有可用串口则返回
+        if(serialPorts.size() == 1){
+            //只有一个串口则下面的不用显示了
+            ui->Com2Frame->setVisible(false);
+            ui->Com3Frame->setVisible(false);
+            ui->linkButton->move(1400,1700);
+            qDebug()<<"当前可用1串口"<<portnameStr1;
+        }else{
+            initSerial2();
+        }
+    } else {//若没有可用串口则返回
         qDebug()<<"当前无可用串口";
         this->close();
         choose->show();
@@ -122,33 +105,131 @@ void MainWindow::initSerial(){
     ui->boxStopBits->addItems(stopbitList);
     ui->boxStopBits->setCurrentText("1");
     ui->boxStopBits->setView(new QListView(this));
-    //流控制
-    //    QStringList flowctrlList;
-    //    flowctrlList<<"No"<<"Hardware"<<"Software";
-    //    ui->boxFlowControl->addItems(flowctrlList);
-    //    ui->boxFlowControl->setCurrentText("No");
-    //    ui->boxFlowControl->setView(new QListView(this));
-
-    //IP地址和端口号
-//    QPushButton *LinkPushButton = new QPushButton(this);
-//   LinkPushButton->setText("连接");
-
-
-    //设置输入框属性，限制输入内容为IP地址和数字
-    ui->ipLineEdit->setInputMask("000.000.000.000;_");
-    ui->portLineEdit->setValidator(new QIntValidator(0,65535,this));
-
-
-    //点击[保存设置]按钮
-    connect(ui->linkButton,&QPushButton::clicked,this,&MainWindow::connectbroker);
 }
 
-void MainWindow::openSerial(QString portnameStr,QSerialPort* serialIo){
+void MainWindow::initSerial2()
+{
+    // 获取可用串口列表
+    QList<QSerialPortInfo> serialPorts = QSerialPortInfo::availablePorts();
 
-    if(!portnameStr.isEmpty()){
-        QSerialPortInfo info(portnameStr);
+    // 查找第二个可用串口
+    if (serialPorts.size() >= 2) {
+        portnameStr2 = serialPorts[1].portName();
+        //使用串口
+        serialIo2 = new QSerialPort(portnameStr2, this);
+        //连接信号槽
+        // 连接信号和槽函数，并传递上下文对象
+        connect(serialIo2, &QSerialPort::readyRead, this, [this]() {
+            recvData(serialIo2);
+        });
+
+        //点击串口[连接]/[断开]按钮
+        connect(ui->btnOpen2, &QPushButton::clicked, this,[this]() mutable {
+            if (ui->btnOpen2->text() == "连接") {
+                openSerial2();
+            } else {
+                closeSerial2();
+            }
+        });
+        //修改串口名
+        ui->portButton2->setText(portnameStr2);
+        if(serialPorts.size() == 2){
+            //只有2个串口下面的不用显示
+            ui->Com3Frame->setVisible(false);
+            ui->linkButton->move(1400,2300);
+            qDebug()<<"当前可用2串口"<<portnameStr2;
+        }else{
+            initSerial3();
+        }
+    }
+
+    //波特率
+    QStringList baudrateList;
+    baudrateList<<"1200"<<"2400"<<"4800"<<"9600"<<"19200"<<"38400"<<"57600"<<"115200";
+    ui->boxBaudRate1->addItems(baudrateList);//添加下拉列表选项
+    ui->boxBaudRate1->setEditable(true);//串口波特率可编辑
+    ui->boxBaudRate1->setCurrentText("9600");//界面中初始值
+    ui->boxBaudRate1->setView(new QListView(this));//该设置是配合qss的，不然item行高设置没效果
+    //数据位
+    QStringList databitList;
+    databitList<<"5"<<"6"<<"7"<<"8";
+    ui->boxDataBits1->addItems(databitList);
+    ui->boxDataBits1->setCurrentText("8");
+    ui->boxDataBits1->setView(new QListView(this));
+    //校验位
+    QStringList parityList;
+    parityList<<"No"<<"Even偶"<<"Odd奇"<<"Space"<<"Mark";
+    ui->boxParity1->addItems(parityList);
+    ui->boxParity1->setCurrentText("No");
+    ui->boxParity1->setView(new QListView(this));
+    //停止位
+    QStringList stopbitList;
+    stopbitList<<"1"<<"1.5"<<"2";
+    ui->boxStopBits1->addItems(stopbitList);
+    ui->boxStopBits1->setCurrentText("1");
+    ui->boxStopBits1->setView(new QListView(this));
+}
+void MainWindow::initSerial3(){
+    // 获取可用串口列表
+    QList<QSerialPortInfo> serialPorts = QSerialPortInfo::availablePorts();
+
+    // 查找第二个可用串口
+    if (serialPorts.size() >= 3) {
+        portnameStr3 = serialPorts[2].portName();
+        //使用串口
+        serialIo3 = new QSerialPort(portnameStr3, this);
+        //连接信号槽
+        // 连接信号和槽函数，并传递上下文对象
+        connect(serialIo3, &QSerialPort::readyRead, this, [this]() {
+            recvData(serialIo3);
+        });
+
+        //点击串口[连接]/[断开]按钮
+        connect(ui->btnOpen3, &QPushButton::clicked, this,[this]() mutable {
+            if (ui->btnOpen3->text() == "连接") {
+                openSerial3();
+            } else {
+                closeSerial3();
+            }
+        });
+        //修改串口名
+        ui->portButton3->setText(portnameStr3);
+        qDebug()<<"当前可用2串口"<<portnameStr3;
+    }
+
+    //波特率
+    QStringList baudrateList;
+    baudrateList<<"1200"<<"2400"<<"4800"<<"9600"<<"19200"<<"38400"<<"57600"<<"115200";
+    ui->boxBaudRate2->addItems(baudrateList);//添加下拉列表选项
+    ui->boxBaudRate2->setEditable(true);//串口波特率可编辑
+    ui->boxBaudRate2->setCurrentText("9600");//界面中初始值
+    ui->boxBaudRate2->setView(new QListView(this));//该设置是配合qss的，不然item行高设置没效果
+    //数据位
+    QStringList databitList;
+    databitList<<"5"<<"6"<<"7"<<"8";
+    ui->boxDataBits2->addItems(databitList);
+    ui->boxDataBits2->setCurrentText("8");
+    ui->boxDataBits2->setView(new QListView(this));
+    //校验位
+    QStringList parityList;
+    parityList<<"No"<<"Even偶"<<"Odd奇"<<"Space"<<"Mark";
+    ui->boxParity2->addItems(parityList);
+    ui->boxParity2->setCurrentText("No");
+    ui->boxParity2->setView(new QListView(this));
+    //停止位
+    QStringList stopbitList;
+    stopbitList<<"1"<<"1.5"<<"2";
+    ui->boxStopBits2->addItems(stopbitList);
+    ui->boxStopBits2->setCurrentText("1");
+    ui->boxStopBits2->setView(new QListView(this));
+}
+
+void MainWindow::openSerial1(){
+    qDebug()<<"串口1打开";
+    if(!portnameStr1.isEmpty()){
+        QSerialPortInfo info(portnameStr1);
         if(info.isNull()){
-            qDebug()<<"当前串口繁忙,可能已被占用,请确认后再连接"<<portnameStr;
+            qDebug()<<"当前串口繁忙,可能已被占用,请确认后再连接"<<portnameStr1;
             return;
         }
         //
@@ -177,46 +258,163 @@ void MainWindow::openSerial(QString portnameStr,QSerialPort* serialIo){
         case 2:stopbit=QSerialPort::TwoStop; break;
         default:stopbit=QSerialPort::OneStop; break;
         }
-//        QSerialPort::FlowControl flowcontrol;
-//        switch (ui->boxFlowControl->currentIndex()) {
-//        case 0:flowcontrol=QSerialPort::NoFlowControl; break;
-//        case 1:flowcontrol=QSerialPort::HardwareControl; break;
-//        case 2:flowcontrol=QSerialPort::SoftwareControl; break;
-//        default:flowcontrol=QSerialPort::NoFlowControl; break;
-//        }
         //串口配置设置
 //        serialIo->setPortName(portnameStr);
-        serialIo->setBaudRate(baudrate);
-        serialIo->setDataBits(databit);
-        serialIo->setParity(parity);
-        serialIo->setStopBits(stopbit);
-//        serialIo->setFlowControl(flowcontrol);//这个我一般没用
-        if(serialIo->open(QIODevice::ReadWrite)){
+        serialIo1->setBaudRate(baudrate);
+        serialIo1->setDataBits(databit);
+        serialIo1->setParity(parity);
+        serialIo1->setStopBits(stopbit);
+        if(serialIo1->open(QIODevice::ReadWrite)){
             qDebug()<<"串口已打开,读写模式";
-            setSerialEnable(false);//改变ui状态
+            setSerial1Enable(false);//改变ui状态
         }else{
-            qDebug()<<"串口打开异常"<<portnameStr<<serialIo->errorString();
-                                                                   serialIo->clearError();
-            setSerialEnable(true);
+            qDebug()<<"串口打开异常"<<portnameStr1<<serialIo1->errorString();
+                                                                   serialIo1->clearError();
+            setSerial1Enable(true);
         }
     }else{
         qDebug()<<"未找到可用串口,请确认串口连接正常后点击刷新";
     }
 }
 
+void MainWindow::openSerial2(){
+    qDebug()<<"串口2打开";
+    if(!portnameStr2.isEmpty()){
+        QSerialPortInfo info(portnameStr2);
+        if(info.isNull()){
+            qDebug()<<"当前串口繁忙,可能已被占用,请确认后再连接"<<portnameStr2;
+            return;
+        }
+        //
+        qint32 baudrate=ui->boxBaudRate1->currentText().toInt();
+        QSerialPort::DataBits databit;
+        switch (ui->boxDataBits1->currentIndex()) {
+        case 0:databit=QSerialPort::Data5; break;
+        case 1:databit=QSerialPort::Data6; break;
+        case 2:databit=QSerialPort::Data7; break;
+        case 3:databit=QSerialPort::Data8; break;
+        default:databit=QSerialPort::Data8; break;
+        }
+        QSerialPort::Parity parity;
+        switch (ui->boxParity1->currentIndex()) {
+        case 0:parity=QSerialPort::NoParity; break;
+        case 1:parity=QSerialPort::EvenParity; break;
+        case 2:parity=QSerialPort::OddParity; break;
+        case 3:parity=QSerialPort::SpaceParity; break;
+        case 4:parity=QSerialPort::MarkParity; break;
+        default:parity=QSerialPort::NoParity; break;
+        }
+        QSerialPort::StopBits stopbit;
+        switch (ui->boxStopBits1->currentIndex()) {
+        case 0:stopbit=QSerialPort::OneStop; break;
+        case 1:stopbit=QSerialPort::OneAndHalfStop; break;
+        case 2:stopbit=QSerialPort::TwoStop; break;
+        default:stopbit=QSerialPort::OneStop; break;
+        }
+        //串口配置设置
+        //        serialIo->setPortName(portnameStr);
+        serialIo2->setBaudRate(baudrate);
+        serialIo2->setDataBits(databit);
+        serialIo2->setParity(parity);
+        serialIo2->setStopBits(stopbit);
+        if(serialIo2->open(QIODevice::ReadWrite)){
+            qDebug()<<"串口已打开,读写模式";
+            setSerial2Enable(false);//改变ui状态
+        }else{
+            qDebug()<<"串口打开异常"<<portnameStr2<<serialIo2->errorString();
+                                                                    serialIo2->clearError();
+            setSerial2Enable(true);
+        }
+    }else{
+        qDebug()<<"未找到可用串口,请确认串口连接正常后点击刷新";
+    }
+}
 
-void MainWindow::setSerialEnable(bool enabled)
+void MainWindow::openSerial3(){
+    qDebug()<<"串口3打开";
+    if(!portnameStr3.isEmpty()){
+        QSerialPortInfo info(portnameStr3);
+        if(info.isNull()){
+            qDebug()<<"当前串口繁忙,可能已被占用,请确认后再连接"<<portnameStr3;
+            return;
+        }
+        //
+        qint32 baudrate=ui->boxBaudRate2->currentText().toInt();
+        QSerialPort::DataBits databit;
+        switch (ui->boxDataBits2->currentIndex()) {
+        case 0:databit=QSerialPort::Data5; break;
+        case 1:databit=QSerialPort::Data6; break;
+        case 2:databit=QSerialPort::Data7; break;
+        case 3:databit=QSerialPort::Data8; break;
+        default:databit=QSerialPort::Data8; break;
+        }
+        QSerialPort::Parity parity;
+        switch (ui->boxParity2->currentIndex()) {
+        case 0:parity=QSerialPort::NoParity; break;
+        case 1:parity=QSerialPort::EvenParity; break;
+        case 2:parity=QSerialPort::OddParity; break;
+        case 3:parity=QSerialPort::SpaceParity; break;
+        case 4:parity=QSerialPort::MarkParity; break;
+        default:parity=QSerialPort::NoParity; break;
+        }
+        QSerialPort::StopBits stopbit;
+        switch (ui->boxStopBits2->currentIndex()) {
+        case 0:stopbit=QSerialPort::OneStop; break;
+        case 1:stopbit=QSerialPort::OneAndHalfStop; break;
+        case 2:stopbit=QSerialPort::TwoStop; break;
+        default:stopbit=QSerialPort::OneStop; break;
+        }
+        //串口配置设置
+        //        serialIo->setPortName(portnameStr);
+        serialIo3->setBaudRate(baudrate);
+        serialIo3->setDataBits(databit);
+        serialIo3->setParity(parity);
+        serialIo3->setStopBits(stopbit);
+        if(serialIo3->open(QIODevice::ReadWrite)){
+            qDebug()<<"串口已打开,读写模式";
+            setSerial3Enable(false);//改变ui状态
+        }else{
+            qDebug()<<"串口打开异常"<<portnameStr3<<serialIo3->errorString();
+                                                                    serialIo3->clearError();
+            setSerial3Enable(true);
+        }
+    }else{
+        qDebug()<<"未找到可用串口,请确认串口连接正常后点击刷新";
+    }
+}
+
+void MainWindow::setSerial1Enable(bool enabled)
 {
     //打开成功就false不能再修改配置，关闭状态true可以进行设置
-//    ui->btnRefresh->setEnabled(enabled);
     ui->btnOpen1->setText(enabled?QString("连接"):QString("断开"));
     //可以把btn和配置分在两个widget里，这样直接设置widget的enable就没这么麻烦了
-//    ui->boxPortName->setEnabled(enabled);
     ui->boxBaudRate->setEnabled(enabled);
     ui->boxDataBits->setEnabled(enabled);
     ui->boxParity->setEnabled(enabled);
     ui->boxStopBits->setEnabled(enabled);
 //    ui->boxFlowControl->setEnabled(enabled);
+}
+
+void MainWindow::setSerial2Enable(bool enabled)
+{
+    //打开成功就false不能再修改配置，关闭状态true可以进行设置
+    ui->btnOpen2->setText(enabled?QString("连接"):QString("断开"));
+    //可以把btn和配置分在两个widget里，这样直接设置widget的enable就没这么麻烦了
+    ui->boxBaudRate1->setEnabled(enabled);
+    ui->boxDataBits1->setEnabled(enabled);
+    ui->boxParity1->setEnabled(enabled);
+    ui->boxStopBits1->setEnabled(enabled);
+}
+
+void MainWindow::setSerial3Enable(bool enabled)
+{
+    //打开成功就false不能再修改配置，关闭状态true可以进行设置
+    ui->btnOpen3->setText(enabled?QString("连接"):QString("断开"));
+    //可以把btn和配置分在两个widget里，这样直接设置widget的enable就没这么麻烦了
+    ui->boxBaudRate2->setEnabled(enabled);
+    ui->boxDataBits2->setEnabled(enabled);
+    ui->boxParity2->setEnabled(enabled);
+    ui->boxStopBits2->setEnabled(enabled);
 }
 
 void MainWindow::sendACK(QSerialPort* serialIo){
@@ -258,7 +456,7 @@ void MainWindow::recvData(QSerialPort* serialIo)
         }
 //        ui->textRecv->append(QString::fromUtf8(recv_data));
 //        qDebug()<<"已接收1："<<QString::fromUtf8(recv_data);
-        qDebug()<<"已接收2："<<QString::fromUtf8(recv_buffer);
+//        qDebug()<<"已接收2："<<QString::fromUtf8(recv_buffer);
     }
 }
 
@@ -273,18 +471,33 @@ void MainWindow::connectbroker()
     mqttclient.connect(mqttIP, mqttPort);
 }
 
-void MainWindow::closeSerial(QSerialPort* serialIo)
+void MainWindow::closeSerial1()
 {
+    serialIo1->clear();
+    serialIo1->close();
+    qDebug()<<"串口已关闭"<<portnameStr1;
+    setSerial1Enable(true);
+}
 
-    serialIo->clear();
-    serialIo->close();
+void MainWindow::closeSerial2()
+{
+    serialIo2->clear();
+    serialIo2->close();
+    qDebug()<<"串口已关闭"<<portnameStr2;
+    setSerial2Enable(true);
+}
+
+void MainWindow::closeSerial3()
+{
+    serialIo1->clear();
+    serialIo1->close();
     qDebug()<<"串口已关闭";
-    setSerialEnable(true);
+    setSerial3Enable(true);
 }
 
 void MainWindow::processCompletePacket(QByteArray* buffer,QSerialPort* serialIo){
 //    qDebug()<<"接收到"<<buffer;
-    qDebug()<<"处理接收到："<<buffer->toHex(' ');
+//    qDebug()<<"处理接收到："<<buffer->toHex(' ');
     const QByteArray start_flag = QByteArray::fromHex(sf.toLatin1());  // 青鸟起始标志为 0x82
     const QByteArray end_flag = QByteArray::fromHex(ef.toLatin1());    // 青鸟结束标志为 0x83
     const QByteArray begin_flag = QByteArray::fromHex(bf.toLatin1());  // 依爱起始标志为 0x68
@@ -338,7 +551,7 @@ void MainWindow::processCompletePacket(QByteArray* buffer,QSerialPort* serialIo)
         string parsed_str = yiaiparse.parse(hex_str.toUtf8().constData());
         QString resultdata = QString::fromStdString(parsed_str);
 //        ui->textRecv->append(resultdata);
-//        qDebug()<<"已接收："<<resultdata;
+        qDebug()<<"已接收："<<resultdata;
 
         // 存储心跳与告警信息
 //        if (resultdata.indexOf("心跳")>0){

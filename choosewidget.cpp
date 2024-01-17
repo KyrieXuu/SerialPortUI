@@ -45,6 +45,5 @@ void choosewidget::on_startButton_clicked()
 }
 
 bool choosewidget::getable(){
-    qDebug()<<"启动标志："<<able;
     return able;
 }

@@ -28,11 +28,20 @@ public:
     MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
 
-    void initSerial();  //初始化串口设置
+//    void initSerial();  //初始化串口
     void initMainUi();  //初始化界面操作
+//    void initSerialUI(QSerialPort* serialIo1,QSerialPort* serialIo2,QSerialPort* serialIo3);//初始化串口界面
+    void initSerial1();  //初始化串口设置
+    void initSerial2();  //初始化串口设置
+    void initSerial3();  //初始化串口设置
 
-    void openSerial(QString portnameStr,QSerialPort* serialIo);  //槽函数-打开串口
-    void closeSerial(QSerialPort* serialIo); //槽函数-关闭串口
+    void openSerial1();  //槽函数-打开串口
+    void openSerial2();  //槽函数-打开串口
+    void openSerial3();  //槽函数-打开串口
+
+    void closeSerial1(); //槽函数-关闭串口
+    void closeSerial2(); //槽函数-关闭串口
+    void closeSerial3(); //槽函数-关闭串口
     void connectbroker();//连接服务器
 
     void saveDataInTxtFile(QString filepath, QString data);     //将解析的数据保存到文件中
@@ -48,7 +57,9 @@ private:
     const QString ef = "83"; //青鸟协议结束标志
     const QString bf = "68"; //依爱RS232协议开始标志
     const QString ff = "16"; //依爱RS232协议结束标志
-    void setSerialEnable(bool enabled);//连接后不能修改该串口配置
+    void setSerial1Enable(bool enabled);//连接后不能修改该串口配置
+    void setSerial2Enable(bool enabled);//连接后不能修改该串口配置
+    void setSerial3Enable(bool enabled);//连接后不能修改该串口配置
     void processCompletePacket(QByteArray* buffer,QSerialPort* serialIo); //处理不连续数据并解析
 
     QString mqttIP;  //MQTT连接IP
@@ -62,6 +73,10 @@ private:
     Ui::MainWindow *ui;
 
 //    QSerialPort *serialIo;//串口io，一般可以把串口io扔到线程里去，避免阻塞ui
+
+    QSerialPort *serialIo1;//串口io
+    QSerialPort *serialIo2;//串口io
+    QSerialPort *serialIo3;//串口io
 
     choosewidget *choose;//choosewidget对象
 

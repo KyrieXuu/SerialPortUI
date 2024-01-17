@@ -23,6 +23,12 @@
         <height>0</height>
        </size>
       </property>
+      <property name="maximumSize">
+       <size>
+        <width>16777215</width>
+        <height>16777215</height>
+       </size>
+      </property>
       <property name="widgetResizable">
        <bool>true</bool>
       </property>
@@ -30,15 +36,15 @@
        <property name="geometry">
         <rect>
          <x>0</x>
-         <y>-1346</y>
+         <y>-2189</y>
          <width>1849</width>
-         <height>2400</height>
+         <height>3000</height>
         </rect>
        </property>
        <property name="minimumSize">
         <size>
          <width>1000</width>
-         <height>2400</height>
+         <height>3000</height>
         </size>
        </property>
        <widget class="QFrame" name="frame">
@@ -1225,7 +1231,7 @@ color:rgb(0, 124, 247);</string>
               </property>
               <layout class="QVBoxLayout" name="verticalLayout_14">
                <item>
-                <widget class="QComboBox" name="comboBox_7">
+                <widget class="QComboBox" name="boxBaudRate1">
                  <property name="minimumSize">
                   <size>
                    <width>680</width>
@@ -1241,7 +1247,7 @@ color:rgb(0, 124, 247);</string>
                 </widget>
                </item>
                <item>
-                <widget class="QComboBox" name="comboBox_8">
+                <widget class="QComboBox" name="boxParity1">
                  <property name="minimumSize">
                   <size>
                    <width>680</width>
@@ -1257,7 +1263,7 @@ color:rgb(0, 124, 247);</string>
                 </widget>
                </item>
                <item>
-                <widget class="QComboBox" name="comboBox_9">
+                <widget class="QComboBox" name="boxDataBits1">
                  <property name="minimumSize">
                   <size>
                    <width>680</width>
@@ -1273,7 +1279,7 @@ color:rgb(0, 124, 247);</string>
                 </widget>
                </item>
                <item>
-                <widget class="QComboBox" name="comboBox_10">
+                <widget class="QComboBox" name="boxStopBits1">
                  <property name="minimumSize">
                   <size>
                    <width>680</width>
@@ -1355,7 +1361,7 @@ color:rgb(119, 119, 123);</string>
         <property name="geometry">
          <rect>
           <x>1470</x>
-          <y>2300</y>
+          <y>2910</y>
           <width>221</width>
           <height>51</height>
          </rect>
@@ -1368,6 +1374,312 @@ color:rgb(255, 255, 255)</string>
         <property name="text">
          <string>保存设置</string>
         </property>
+       </widget>
+       <widget class="QFrame" name="Com3Frame">
+        <property name="geometry">
+         <rect>
+          <x>200</x>
+          <y>2370</y>
+          <width>1491</width>
+          <height>501</height>
+         </rect>
+        </property>
+        <property name="styleSheet">
+         <string notr="true">background-color: rgb(251, 252, 252);</string>
+        </property>
+        <property name="frameShape">
+         <enum>QFrame::StyledPanel</enum>
+        </property>
+        <property name="frameShadow">
+         <enum>QFrame::Raised</enum>
+        </property>
+        <layout class="QVBoxLayout" name="verticalLayout_12">
+         <item>
+          <widget class="QFrame" name="frame_28">
+           <property name="minimumSize">
+            <size>
+             <width>0</width>
+             <height>50</height>
+            </size>
+           </property>
+           <property name="maximumSize">
+            <size>
+             <width>16777215</width>
+             <height>50</height>
+            </size>
+           </property>
+           <property name="styleSheet">
+            <string notr="true">font: 18pt &quot;Microsoft YaHei UI&quot;;
+color:rgb(0, 124, 247);</string>
+           </property>
+           <property name="frameShape">
+            <enum>QFrame::StyledPanel</enum>
+           </property>
+           <property name="frameShadow">
+            <enum>QFrame::Raised</enum>
+           </property>
+           <layout class="QHBoxLayout" name="horizontalLayout_15">
+            <item>
+             <widget class="QLabel" name="portButton3">
+              <property name="text">
+               <string>     串口COM3</string>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <spacer name="horizontalSpacer_8">
+              <property name="orientation">
+               <enum>Qt::Horizontal</enum>
+              </property>
+              <property name="sizeHint" stdset="0">
+               <size>
+                <width>1311</width>
+                <height>20</height>
+               </size>
+              </property>
+             </spacer>
+            </item>
+           </layout>
+          </widget>
+         </item>
+         <item>
+          <widget class="QFrame" name="frame_29">
+           <property name="frameShape">
+            <enum>QFrame::StyledPanel</enum>
+           </property>
+           <property name="frameShadow">
+            <enum>QFrame::Raised</enum>
+           </property>
+           <layout class="QHBoxLayout" name="horizontalLayout_16">
+            <item>
+             <widget class="QFrame" name="frame_30">
+              <property name="styleSheet">
+               <string notr="true">font: 700 18px &quot;Microsoft YaHei UI&quot;;</string>
+              </property>
+              <property name="frameShape">
+               <enum>QFrame::StyledPanel</enum>
+              </property>
+              <property name="frameShadow">
+               <enum>QFrame::Raised</enum>
+              </property>
+              <layout class="QVBoxLayout" name="verticalLayout_15">
+               <item>
+                <widget class="QLabel" name="label_35">
+                 <property name="minimumSize">
+                  <size>
+                   <width>400</width>
+                   <height>0</height>
+                  </size>
+                 </property>
+                 <property name="text">
+                  <string>      · 串口波特率</string>
+                 </property>
+                </widget>
+               </item>
+               <item>
+                <widget class="QLabel" name="label_36">
+                 <property name="minimumSize">
+                  <size>
+                   <width>400</width>
+                   <height>0</height>
+                  </size>
+                 </property>
+                 <property name="text">
+                  <string>      · 串口校验位</string>
+                 </property>
+                </widget>
+               </item>
+               <item>
+                <widget class="QLabel" name="label_37">
+                 <property name="text">
+                  <string>      · 串口数据位</string>
+                 </property>
+                </widget>
+               </item>
+               <item>
+                <widget class="QLabel" name="label_38">
+                 <property name="minimumSize">
+                  <size>
+                   <width>400</width>
+                   <height>0</height>
+                  </size>
+                 </property>
+                 <property name="text">
+                  <string>      · 串口停止位</string>
+                 </property>
+                </widget>
+               </item>
+               <item>
+                <widget class="QLabel" name="label_39">
+                 <property name="text">
+                  <string>      · 串口打包时间</string>
+                 </property>
+                </widget>
+               </item>
+               <item>
+                <widget class="QLabel" name="label_40">
+                 <property name="minimumSize">
+                  <size>
+                   <width>400</width>
+                   <height>0</height>
+                  </size>
+                 </property>
+                 <property name="text">
+                  <string>      · 串口打包长度（bytes）</string>
+                 </property>
+                </widget>
+               </item>
+               <item>
+                <widget class="QLabel" name="label_41">
+                 <property name="minimumSize">
+                  <size>
+                   <width>400</width>
+                   <height>0</height>
+                  </size>
+                 </property>
+                 <property name="text">
+                  <string>      · 连接状态</string>
+                 </property>
+                </widget>
+               </item>
+              </layout>
+             </widget>
+            </item>
+            <item>
+             <widget class="QFrame" name="frame_31">
+              <property name="frameShape">
+               <enum>QFrame::StyledPanel</enum>
+              </property>
+              <property name="frameShadow">
+               <enum>QFrame::Raised</enum>
+              </property>
+              <layout class="QVBoxLayout" name="verticalLayout_16">
+               <item>
+                <widget class="QComboBox" name="boxBaudRate2">
+                 <property name="minimumSize">
+                  <size>
+                   <width>680</width>
+                   <height>40</height>
+                  </size>
+                 </property>
+                 <property name="maximumSize">
+                  <size>
+                   <width>680</width>
+                   <height>40</height>
+                  </size>
+                 </property>
+                </widget>
+               </item>
+               <item>
+                <widget class="QComboBox" name="boxParity2">
+                 <property name="minimumSize">
+                  <size>
+                   <width>680</width>
+                   <height>40</height>
+                  </size>
+                 </property>
+                 <property name="maximumSize">
+                  <size>
+                   <width>680</width>
+                   <height>40</height>
+                  </size>
+                 </property>
+                </widget>
+               </item>
+               <item>
+                <widget class="QComboBox" name="boxDataBits2">
+                 <property name="minimumSize">
+                  <size>
+                   <width>680</width>
+                   <height>40</height>
+                  </size>
+                 </property>
+                 <property name="maximumSize">
+                  <size>
+                   <width>680</width>
+                   <height>40</height>
+                  </size>
+                 </property>
+                </widget>
+               </item>
+               <item>
+                <widget class="QComboBox" name="boxStopBits2">
+                 <property name="minimumSize">
+                  <size>
+                   <width>680</width>
+                   <height>40</height>
+                  </size>
+                 </property>
+                 <property name="maximumSize">
+                  <size>
+                   <width>680</width>
+                   <height>40</height>
+                  </size>
+                 </property>
+                </widget>
+               </item>
+               <item>
+                <widget class="QLineEdit" name="lineEdit_12">
+                 <property name="minimumSize">
+                  <size>
+                   <width>680</width>
+                   <height>40</height>
+                  </size>
+                 </property>
+                 <property name="maximumSize">
+                  <size>
+                   <width>680</width>
+                   <height>40</height>
+                  </size>
+                 </property>
+                </widget>
+               </item>
+               <item>
+                <widget class="QLineEdit" name="lineEdit_13">
+                 <property name="minimumSize">
+                  <size>
+                   <width>680</width>
+                   <height>40</height>
+                  </size>
+                 </property>
+                 <property name="maximumSize">
+                  <size>
+                   <width>680</width>
+                   <height>40</height>
+                  </size>
+                 </property>
+                </widget>
+               </item>
+               <item>
+                <widget class="QPushButton" name="btnOpen3">
+                 <property name="minimumSize">
+                  <size>
+                   <width>140</width>
+                   <height>40</height>
+                  </size>
+                 </property>
+                 <property name="maximumSize">
+                  <size>
+                   <width>140</width>
+                   <height>40</height>
+                  </size>
+                 </property>
+                 <property name="styleSheet">
+                  <string notr="true">font: 18pt &quot;Microsoft YaHei UI&quot;;
+color:rgb(119, 119, 123);</string>
+                 </property>
+                 <property name="text">
+                  <string>连接</string>
+                 </property>
+                </widget>
+               </item>
+              </layout>
+             </widget>
+            </item>
+           </layout>
+          </widget>
+         </item>
+        </layout>
        </widget>
       </widget>
      </widget>
