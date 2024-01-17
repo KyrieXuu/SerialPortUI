@@ -30,7 +30,7 @@
        <property name="geometry">
         <rect>
          <x>0</x>
-         <y>-1671</y>
+         <y>-1346</y>
          <width>1849</width>
          <height>2400</height>
         </rect>
@@ -1045,7 +1045,7 @@ color:rgb(119, 119, 123);</string>
          </item>
         </layout>
        </widget>
-       <widget class="QFrame" name="frame_21">
+       <widget class="QFrame" name="Com2Frame">
         <property name="geometry">
          <rect>
           <x>200</x>

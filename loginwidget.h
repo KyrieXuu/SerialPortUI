@@ -21,10 +21,15 @@ public:
     explicit loginwidget(QWidget *parent = nullptr);
     ~loginwidget();
 
-    void linkdatabase();
+    void linkdatabase();//连接数据库
+    void initUI();//初始化UI
 
 private slots:
     void on_pushButton_clicked();
+
+private:
+    const QString User = "admin";
+    const QString Code = "123456";
 
 private:
     Ui::loginwidget *ui;

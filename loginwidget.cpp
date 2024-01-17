@@ -6,6 +6,7 @@ loginwidget::loginwidget(QWidget *parent) :
     ui(new Ui::loginwidget)
 {
     ui->setupUi(this);
+    initUI();
     QTimer::singleShot(2000, [this]() {
         linkdatabase();
     });
@@ -19,9 +20,20 @@ loginwidget::~loginwidget()
 
 void loginwidget::on_pushButton_clicked()
 {
-    this->close();
-    choosewidget *choose = new choosewidget();
-    choose->show();
+    QString user = ui->UserNameEdit->text();
+    QString code = ui->CodeEdit->text();
+    if( user == User && code == Code ){
+        this->close();
+        choosewidget *choose = new choosewidget();
+        choose->show();
+    }else{
+        qDebug()<<"输入错误";
+    }
+
+}
+
+void loginwidget::initUI(){
+
 }
 
 void loginwidget::linkdatabase(){

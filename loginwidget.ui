@@ -25,8 +25,21 @@
   <property name="styleSheet">
    <string notr="true">background-color:rgb(255, 255, 255)</string>
   </property>
-  <layout class="QVBoxLayout" name="verticalLayout_3">
-   <item alignment="Qt::AlignHCenter|Qt::AlignVCenter">
+  <layout class="QHBoxLayout" name="horizontalLayout_2">
+   <item>
+    <spacer name="horizontalSpacer">
+     <property name="orientation">
+      <enum>Qt::Horizontal</enum>
+     </property>
+     <property name="sizeHint" stdset="0">
+      <size>
+       <width>293</width>
+       <height>20</height>
+      </size>
+     </property>
+    </spacer>
+   </item>
+   <item>
     <widget class="QFrame" name="frame">
      <property name="sizePolicy">
       <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
@@ -55,7 +68,7 @@
      <property name="frameShadow">
       <enum>QFrame::Raised</enum>
      </property>
-     <layout class="QVBoxLayout" name="verticalLayout_2">
+     <layout class="QVBoxLayout" name="verticalLayout_4">
       <item>
        <widget class="QLabel" name="label">
         <property name="minimumSize">
@@ -94,7 +107,73 @@ color:rgb(0, 73, 147);</string>
          <enum>QFrame::Raised</enum>
         </property>
         <layout class="QHBoxLayout" name="horizontalLayout">
-         <item alignment="Qt::AlignHCenter">
+         <item>
+          <widget class="QFrame" name="frame_5">
+           <property name="frameShape">
+            <enum>QFrame::StyledPanel</enum>
+           </property>
+           <property name="frameShadow">
+            <enum>QFrame::Raised</enum>
+           </property>
+           <layout class="QVBoxLayout" name="verticalLayout_3">
+            <item>
+             <widget class="QFrame" name="frame_4">
+              <property name="frameShape">
+               <enum>QFrame::StyledPanel</enum>
+              </property>
+              <property name="frameShadow">
+               <enum>QFrame::Raised</enum>
+              </property>
+              <layout class="QVBoxLayout" name="verticalLayout_2">
+               <item>
+                <widget class="QLabel" name="label_2">
+                 <property name="styleSheet">
+                  <string notr="true">font: 700 14pt &quot;Microsoft YaHei UI&quot;;
+color: rgb(0, 0, 0);</string>
+                 </property>
+                 <property name="text">
+                  <string>用户名</string>
+                 </property>
+                </widget>
+               </item>
+               <item>
+                <widget class="QLabel" name="label_4">
+                 <property name="text">
+                  <string/>
+                 </property>
+                </widget>
+               </item>
+               <item>
+                <widget class="QLabel" name="label_3">
+                 <property name="styleSheet">
+                  <string notr="true">font: 700 14pt &quot;Microsoft YaHei UI&quot;;
+color: rgb(0, 0, 0);</string>
+                 </property>
+                 <property name="text">
+                  <string>密码</string>
+                 </property>
+                </widget>
+               </item>
+              </layout>
+             </widget>
+            </item>
+            <item>
+             <spacer name="verticalSpacer">
+              <property name="orientation">
+               <enum>Qt::Vertical</enum>
+              </property>
+              <property name="sizeHint" stdset="0">
+               <size>
+                <width>20</width>
+                <height>58</height>
+               </size>
+              </property>
+             </spacer>
+            </item>
+           </layout>
+          </widget>
+         </item>
+         <item>
           <widget class="QFrame" name="frame_2">
            <property name="frameShape">
             <enum>QFrame::StyledPanel</enum>
@@ -104,7 +183,7 @@ color:rgb(0, 73, 147);</string>
            </property>
            <layout class="QVBoxLayout" name="verticalLayout">
             <item>
-             <widget class="QLineEdit" name="lineEdit">
+             <widget class="QLineEdit" name="UserNameEdit">
               <property name="sizePolicy">
                <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
                 <horstretch>0</horstretch>
@@ -124,16 +203,15 @@ color:rgb(0, 73, 147);</string>
                </size>
               </property>
               <property name="styleSheet">
-               <string notr="true">color:rgb(204, 204, 204);
-font: 10pt &quot;Microsoft YaHei UI&quot;;</string>
+               <string notr="true">font: 10pt &quot;Microsoft YaHei UI&quot;;</string>
               </property>
               <property name="text">
-               <string>请输入用户名</string>
+               <string/>
               </property>
              </widget>
             </item>
             <item>
-             <widget class="QLineEdit" name="lineEdit_2">
+             <widget class="QLineEdit" name="CodeEdit">
               <property name="minimumSize">
                <size>
                 <width>300</width>
@@ -147,11 +225,10 @@ font: 10pt &quot;Microsoft YaHei UI&quot;;</string>
                </size>
               </property>
               <property name="styleSheet">
-               <string notr="true">color:rgb(204, 204, 204);
-font: 10pt &quot;Microsoft YaHei UI&quot;;</string>
+               <string notr="true">font: 10pt &quot;Microsoft YaHei UI&quot;;</string>
               </property>
               <property name="text">
-               <string>请输入密码</string>
+               <string/>
               </property>
              </widget>
             </item>
@@ -186,6 +263,19 @@ background-color:rgb(25, 137, 250);</string>
       </item>
      </layout>
     </widget>
+   </item>
+   <item>
+    <spacer name="horizontalSpacer_2">
+     <property name="orientation">
+      <enum>Qt::Horizontal</enum>
+     </property>
+     <property name="sizeHint" stdset="0">
+      <size>
+       <width>292</width>
+       <height>20</height>
+      </size>
+     </property>
+    </spacer>
    </item>
   </layout>
  </widget>

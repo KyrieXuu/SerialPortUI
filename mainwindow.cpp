@@ -90,6 +90,7 @@ void MainWindow::initSerial(){
         });
         //修改串口名
         ui->portButton1->setText(portnameStr1);
+        ui->Com2Frame->setVisible(false);
     }else{//若没有可用串口则返回
         qDebug()<<"当前无可用串口";
         this->close();
